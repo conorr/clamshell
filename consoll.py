@@ -6,9 +6,10 @@ class Consoll():
 
     lines = []
     cursor = 0
+    line_pos = 0
     chars  = ''
 
-    def get_char(self):
+    def start(self):
 
         fd = sys.stdin.fileno()
         oldterm = termios.tcgetattr(fd)
@@ -19,29 +20,25 @@ class Consoll():
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 
         try:
-            #escaped1 = False
-            #escaped2 = False
             while 1:
                 try:
                     c = sys.stdin.read(1)
                     if c == '0':
                         c = ''
                         self.reset_line()
-                        if len(self.lines) > 0:
-                            sys.stdout.write(self.lines[0])
-                            cursor = len(self.lines[0])
-                            chars = self.lines[0]
+                        self.cycle_backlog()
                     if c == '\n':
-                        self.lines.append(self.chars)
-
-                    #if c == '\x1b':
-                        #escaped1 = True
-                    #if escaped1 == True and c == '[':
-                        #escaped2 = True
-                    #if escaped2 == True and c == 'A':
-                        #sys.stdout.write('\b\ \b\b');
-                        #escaped1 = False
-                        #escaped2 = False
+                        sys.stdout.write('\n')
+                        self.lines.insert(0, self.chars)
+                        request = self.chars
+                        self.chars = ''
+                        c = ''
+                        self.line_pos = 0
+                        self.parse_request(request)
+                    if c == '\x7f':
+                        sys.stdout.write('\b \b')
+                        self.chars = self.chars[0:-1]
+                        c = ''
 
                     sys.stdout.write(c)
                     self.cursor += 1
@@ -61,12 +58,27 @@ class Consoll():
         self.chars = ''
 
     def cycle_backlog(self):
-        pos = 0
-        if len(self.lines) > 0:
-            yield self.lines[0]
-        pos += 1
+        if len(self.lines) == 0: return
+
+        sys.stdout.write(self.lines[self.line_pos])
+        self.cursor = len(self.lines[self.line_pos])
+        self.chars = self.lines[self.line_pos]
+        if self.line_pos < len(self.lines) - 1:
+            self.line_pos += 1
+
+    def hello_world(self):
+        print "hello world!"
+
+    def parse_request(self, request):
+        if request == '': return
+        cmd = ''
+        args = []
+        tokens = request.split(' ')
+        cmd = tokens[0]
+        if len(tokens) > 1: args = tokens[1:]
+        #print cmd, args
 
 if __name__ == '__main__':
 
-    i = Consoll()
-    i.get_char()
+    c = Consoll()
+    c.start()
