@@ -4,7 +4,7 @@ class Consoll():
 
     history = []
     cursor = 0
-    history_pos = 0
+    history_pos = -1
     line  = ''
 
     def start(self):
@@ -53,7 +53,7 @@ class Consoll():
         self.add_to_history()
         request = self.line
         self.line = ''
-        self.history_pos = 0
+        self.history_pos = -1
         self.parse_request(request)
 
     def backspace(self):
@@ -73,27 +73,25 @@ class Consoll():
 
     def history_back(self):
         entries = len(self.history)
-        pos     = self.history_pos
         if entries == 0: return
-        self.write_line(self.history[pos])    
-        if entries - pos > 1:
+        if entries - self.history_pos > 1:
             self.history_pos += 1
+        self.write_line(self.history[self.history_pos])
 
     def history_forward(self):
         entries = len(self.history)
-        pos     = self.history_pos
-
         if entries == 0: return
-
-        if pos == 0:
+        if self.history_pos >= 0: self.history_pos -= 1
+        if self.history_pos < 0:
             self.reset_line()
-        elif pos > 0:
-            self.write_line(self.history[pos - 1])    
+            return
+        self.write_line(self.history[self.history_pos])
 
     def write_line(self, s):
         self.reset_line()
         sys.stdout.write(s)
         self.cursor = len(s)
+        self.line = s
 
     def hello_world(self):
         print "hello world!"
