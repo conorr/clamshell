@@ -4,10 +4,10 @@ import time
 
 class Consoll():
 
-    lines = []
+    history = []
     cursor = 0
     line_pos = 0
-    chars  = ''
+    line  = ''
 
     def start(self):
 
@@ -26,48 +26,62 @@ class Consoll():
                     if c == '0':
                         c = ''
                         self.reset_line()
-                        self.cycle_backlog()
+                        self.history_back()
                     if c == '\n':
-                        sys.stdout.write('\n')
-                        self.lines.insert(0, self.chars)
-                        request = self.chars
-                        self.chars = ''
                         c = ''
-                        self.line_pos = 0
-                        self.parse_request(request)
+                        self.enter()
                     if c == '\x7f':
-                        sys.stdout.write('\b \b')
-                        self.chars = self.chars[0:-1]
+                        self.backspace()
                         c = ''
 
                     sys.stdout.write(c)
                     self.cursor += 1
-                    self.chars  += c
+                    self.line  += c
 
                 except IOError: pass
         finally:
             termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
             fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
-            print(self.lines)
+
+    def enter(self):
+        sys.stdout.write('\n')
+        self.add_to_history()
+        request = self.line
+        self.line = ''
+        self.line_pos = 0
+        self.parse_request(request)
+
+    def backspace(self):
+        sys.stdout.write('\b \b')
+        self.line = self.line[0:-1]
 
     def reset_line(self):
         for i in range(self.cursor):
-            # delete a character
-            sys.stdout.write('\b \b')
+            self.backspace()
         self.cursor = 0
-        self.chars = ''
+        self.line = ''
 
-    def cycle_backlog(self):
-        if len(self.lines) == 0: return
+    def add_to_history(self):
+        # don't add an empty line
+        if self.line != '':
+            self.history.insert(0, self.line)
 
-        sys.stdout.write(self.lines[self.line_pos])
-        self.cursor = len(self.lines[self.line_pos])
-        self.chars = self.lines[self.line_pos]
-        if self.line_pos < len(self.lines) - 1:
+    def history_back(self):
+        # i give you access to self.history,
+        # you give me a safe back result
+        if len(self.history) == 0: return
+
+        sys.stdout.write(self.history[self.line_pos])
+        self.cursor = len(self.history[self.line_pos])
+        self.line = self.history[self.line_pos]
+        if self.line_pos < len(self.history) - 1:
             self.line_pos += 1
 
     def hello_world(self):
         print "hello world!"
+
+    def list_history(self):
+        print self.history
 
     def parse_request(self, request):
         if request == '': return
@@ -77,6 +91,15 @@ class Consoll():
         cmd = tokens[0]
         if len(tokens) > 1: args = tokens[1:]
         #print cmd, args
+
+        map = {
+               'hello': self.hello_world,
+               'exit': sys.exit,
+               'history': self.list_history
+              }
+
+        if cmd in map.keys():
+            map[cmd]()
 
 if __name__ == '__main__':
 
