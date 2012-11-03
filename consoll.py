@@ -26,6 +26,9 @@ class Consoll():
                     if c == '0':
                         c = ''
                         self.history_back()
+                    if c == '9':
+                        c = ''
+                        self.history_forward()
                     if c == '\n':
                         c = ''
                         self.enter()
@@ -69,18 +72,23 @@ class Consoll():
             self.history.insert(0, self.line)
 
     def history_back(self):
-        # i give you access to self.history,
-        # you give me a safe back result
-
-
-        if len(self.history) == 0: return
-
-        self.write_line(self.history[self.history_pos])
-        #sys.stdout.write(self.history[self.history_pos])
-        #self.cursor = len(self.history[self.history_pos])
-        #self.line = self.history[self.history_pos]
-        if self.history_pos < len(self.history) - 1:
+        entries = len(self.history)
+        pos     = self.history_pos
+        if entries == 0: return
+        self.write_line(self.history[pos])    
+        if entries - pos > 1:
             self.history_pos += 1
+
+    def history_forward(self):
+        entries = len(self.history)
+        pos     = self.history_pos
+
+        if entries == 0: return
+
+        if pos == 0:
+            self.reset_line()
+        elif pos > 0:
+            self.write_line(self.history[pos - 1])    
 
     def write_line(self, s):
         self.reset_line()
