@@ -25,7 +25,6 @@ class Consoll():
                     c = sys.stdin.read(1)
                     if c == '0':
                         c = ''
-                        self.reset_line()
                         self.history_back()
                     if c == '\n':
                         c = ''
@@ -72,13 +71,21 @@ class Consoll():
     def history_back(self):
         # i give you access to self.history,
         # you give me a safe back result
+
+
         if len(self.history) == 0: return
 
-        sys.stdout.write(self.history[self.history_pos])
-        self.cursor = len(self.history[self.history_pos])
-        self.line = self.history[self.history_pos]
+        self.write_line(self.history[self.history_pos])
+        #sys.stdout.write(self.history[self.history_pos])
+        #self.cursor = len(self.history[self.history_pos])
+        #self.line = self.history[self.history_pos]
         if self.history_pos < len(self.history) - 1:
             self.history_pos += 1
+
+    def write_line(self, s):
+        self.reset_line()
+        sys.stdout.write(s)
+        self.cursor = len(s)
 
     def hello_world(self):
         print "hello world!"
