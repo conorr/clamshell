@@ -1,6 +1,4 @@
 import termios, fcntl, sys, os
-import curses
-import time
 
 class Consoll():
 
