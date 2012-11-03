@@ -11,6 +11,7 @@ class Consoll():
 
     def start(self):
 
+        # do a bunch of arcane stuff to set up the terminal
         fd = sys.stdin.fileno()
         oldterm = termios.tcgetattr(fd)
         newattr = termios.tcgetattr(fd)
@@ -19,6 +20,7 @@ class Consoll():
         oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 
+        # main keypress loop
         try:
             while 1:
                 try:
@@ -39,7 +41,10 @@ class Consoll():
                     self.line  += c
 
                 except IOError: pass
+
         finally:
+
+            # reset the terminal
             termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
             fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
 
