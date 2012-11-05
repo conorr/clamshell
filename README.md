@@ -26,7 +26,7 @@ if __name__ == '__main__':
     c.start()
 ```
 
-Now, when you invoke this module in Bash, all of the methods of `Cat` are callable via a command-line:
+Having been initialized with class `Cat`, Consoll itself instantiates a Cat object and -- once `start()` is called -- exposes `Cat`'s methods through a command-line interface:
 
     $ python cat.py
     >> say_meow
