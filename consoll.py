@@ -1,17 +1,19 @@
 import termios, fcntl, sys, os
+from collections import deque
 
 class Consoll():
 
     cursor      = 0
     line        = ''
-    history     = []
+    history     = deque()
     history_pos = -1
-    call         = {}
 
     def __init__(self, obj):
         #for func in obj.__dict__.keys():
             #print func
         self.call = obj.__dict__
+
+        self.call['history'] = self.list_history
 
     def start(self):
 
@@ -76,7 +78,7 @@ class Consoll():
     def add_to_history(self):
         # don't add an empty line
         if self.line != '':
-            self.history.insert(0, self.line)
+            self.history.appendleft(self.line)
 
     def history_back(self):
         entries = len(self.history)
@@ -104,7 +106,8 @@ class Consoll():
         print "hello world!"
 
     def list_history(self):
-        print self.history
+        for i, item in enumerate(self.history):
+            print i, item
 
     def parse_request(self, request):
         if request == '': return
