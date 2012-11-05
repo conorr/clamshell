@@ -8,12 +8,18 @@ class Consoll():
     history     = deque()
     history_pos = -1
 
+    header = ''
+    prompt = ''
+
     def __init__(self, obj):
-        #for func in obj.__dict__.keys():
-            #print func
+
         self.call = obj.__dict__
 
+        self.header = 'Welcome to ' + obj.__name__ + '!'
+
         self.call['history'] = self.list_history
+        self.call['exit']    = sys.exit
+
 
     def start(self):
 
@@ -25,6 +31,8 @@ class Consoll():
         termios.tcsetattr(fd, termios.TCSANOW, newattr)
         oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+
+        print self.header
 
         # main keypress loop
         try:
@@ -57,7 +65,7 @@ class Consoll():
             fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
 
     def enter(self):
-        sys.stdout.write('\n')
+        sys.stdout.write('\n' + self.prompt)
         self.add_to_history()
         request = self.line
         self.line = ''
@@ -73,10 +81,9 @@ class Consoll():
             self.backspace()
         self.cursor = 0
         self.line = ''
-        sys.stdout.write('>>')
 
     def add_to_history(self):
-        # don't add an empty line
+        # only add non-empty lines
         if self.line != '':
             self.history.appendleft(self.line)
 
@@ -102,9 +109,6 @@ class Consoll():
         self.cursor = len(s)
         self.line = s
 
-    def hello_world(self):
-        print "hello world!"
-
     def list_history(self):
         for i, item in enumerate(self.history):
             print i, item
@@ -116,9 +120,9 @@ class Consoll():
         tokens = request.split(' ')
         cmd = tokens[0]
         if len(tokens) > 1: args = tokens[1:]
-        #print cmd, args
 
-
-        if cmd in self.call.keys():
+        try:
             self.call[cmd](*args)
-
+        except KeyError:
+            print "Error: method \'%s\' not defined" % (cmd)
+            pass
