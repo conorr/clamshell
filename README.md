@@ -26,7 +26,7 @@ if __name__ == '__main__':
     c.start()
 ```
 
-Having been initialized with class `Cat`, Consoll itself instantiates a Cat object and -- once `start()` is called -- exposes `Cat`'s methods through a command-line interface:
+Having been initialized with class `Cat`, Consoll itself instantiates a `Cat` object and -- once `start()` is called -- exposes `Cat`'s methods through a command-line interface:
 
     $ python cat.py
     >> say_meow
