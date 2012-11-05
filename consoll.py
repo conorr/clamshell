@@ -2,10 +2,16 @@ import termios, fcntl, sys, os
 
 class Consoll():
 
-    history = []
-    cursor = 0
+    cursor      = 0
+    line        = ''
+    history     = []
     history_pos = -1
-    line  = ''
+    call         = {}
+
+    def __init__(self, obj):
+        #for func in obj.__dict__.keys():
+            #print func
+        self.call = obj.__dict__
 
     def start(self):
 
@@ -65,6 +71,7 @@ class Consoll():
             self.backspace()
         self.cursor = 0
         self.line = ''
+        sys.stdout.write('>>')
 
     def add_to_history(self):
         # don't add an empty line
@@ -108,16 +115,7 @@ class Consoll():
         if len(tokens) > 1: args = tokens[1:]
         #print cmd, args
 
-        map = {
-               'hello': self.hello_world,
-               'exit': sys.exit,
-               'history': self.list_history
-              }
 
-        if cmd in map.keys():
-            map[cmd]()
+        if cmd in self.call.keys():
+            self.call[cmd](*args)
 
-if __name__ == '__main__':
-
-    c = Consoll()
-    c.start()
