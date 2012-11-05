@@ -8,22 +8,25 @@ Consoll provides a command-line interface to your own Python modules. This may n
 
 Here is an example:
 
-    from consoll import Consoll
 
-    class Cat():
+```python
+from consoll import Consoll
 
-        def say_meow():
-            print "meow"
+class Cat():
 
-        def add(a, b):
-            print int(a) + int(b)
+    def say_meow():
+        print "meow"
 
-    if __name__ == '__main__':
+    def add(a, b):
+        print int(a) + int(b)
 
-        c = Consoll(Cat)
-        c.start()
+if __name__ == '__main__':
 
-Then this module can be invoked:
+    c = Consoll(Cat)
+    c.start()
+```
+
+Then this module can be invoked in Bash:
 
     $ python cat.py
     >> say_meow
