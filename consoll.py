@@ -12,16 +12,13 @@ class Consoll():
     header = ''
     prompt = ''
 
-    def __init__(self, func_list):
+    def __init__(self, map):
 
-        for item in func_list:
-            if isinstance(item, tuple):
-                self.map_call[item[0]] = item[1]
-            else:
-                self.map_call[item.__name__] = item
+        for func, ref in map.items():   
+            self.map_call[func] = ref
 
         self.map_call['history'] = self.list_history
-        self.map_call['exit']    = sys.exit
+        #self.map_call['exit']    = sys.exit
 
     def start(self):
 

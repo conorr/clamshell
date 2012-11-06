@@ -1,18 +1,23 @@
 from consoll import Consoll
+import sys
 
 class Cat():
 
-    def meow(self):
-        print "meow"
+    count = 0
 
-    def add(self, a, b):
-        print int(a) + int(b)
+    def meow(self, times=1):
+        for time in range(int(times)):
+            print "meow"
+            self.count += 1
+
+    def meow_count(self):
+        print self.count
 
 if __name__ == '__main__':
 
     my_cat = Cat()
 
-    c = Consoll([ my_cat.meow,
-                  ('woof', my_cat.meow),
-                  my_cat.add ])
+    c = Consoll({ 'meow':       my_cat.meow,
+                  'meow_count': my_cat.meow_count,
+                  'exit':       sys.exit })
     c.start()
