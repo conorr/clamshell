@@ -136,5 +136,5 @@ class Consoll():
         try:
             self.map_call[cmd](*args)
         except KeyError:
-            print "Error: method \'%s\' not defined" % (cmd)
+            print "Error: command \'%s\' not defined" % (cmd)
             pass
