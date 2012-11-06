@@ -8,6 +8,7 @@ class Consoll():
     history     = deque()
     history_pos = -1
     map_call        = {}
+    escaped     = 0
 
     header = ''
     prompt = ''
@@ -18,7 +19,6 @@ class Consoll():
             self.map_call[func] = ref
 
         self.map_call['history'] = self.list_history
-        #self.map_call['exit']    = sys.exit
 
     def start(self):
 
@@ -38,12 +38,25 @@ class Consoll():
             while 1:
                 try:
                     c = sys.stdin.read(1)
-                    if c == '0':
+
+                    if c == '\x1b':
+                        self.escaped = 1
                         c = ''
+                    if c == '[' and self.escaped == 1:
+                        self.escaped = 2
+                        c = ''
+                    if c == 'A' and self.escaped == 2:
+                        c = ''
+                        self.escaped = 0
                         self.history_back()
-                    if c == '9':
+                    if c == 'B' and self.escaped == 2:
                         c = ''
+                        self.escaped = 0
                         self.history_forward()
+                    if c == 'D' and self.escaped == 2:
+                        c = ''
+                    if c == 'C' and self.escaped == 2:
+                        c = ''
                     if c == '\n':
                         c = ''
                         self.enter()
