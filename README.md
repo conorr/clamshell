@@ -4,9 +4,9 @@ consoll
 Command-line wrapper for Python modules
 ---------------------------------------
 
-Consoll provides a command-line interface to your own Python modules. This may not sound like a big deal, since you can already import modules into Python's interactive console using the `-i` switch. The aim of consoll, however, is to wrap your module in a command-line interface in such a way that your module becomes _indistinguishable_ from a full-blown terminal client with command history and tab completion.
+Consoll enables you to write your own interactive shells trivially. Arrow-key-navigable command history and tab completion come baked in.
 
-Thus, consoll enables you to trivially write your own console clients and pseudo-shells. Here is an example:
+Here is an example:
 
 
 ```python
@@ -22,11 +22,13 @@ class Cat():
 
 if __name__ == '__main__':
 
-    c = Consoll(Cat)
+    my_cat = Cat()
+    c = Consoll({'say_meow': my_cat.say_meow,
+                      'add': my_cat.add })
     c.start()
 ```
 
-Behind the scenes, having been initialized with class `Cat`, consoll itself instantiates a `Cat` object and then exposes `Cat`'s methods through a command-line interface once `start()` is called:
+Running the script starts a minimal command-line interface, with `say_meow` and `add` exposed to it:
 
     $ python cat.py
     >> say_meow
