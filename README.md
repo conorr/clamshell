@@ -28,7 +28,7 @@ if __name__ == '__main__':
     c.start()
 ```
 
-Running the script starts a _minimal_ command-line interface that exposes the methods we passed to the `Consoll` constuctor:
+Running the script starts a minimal command-line interface that exposes the methods we passed to the `Consoll` constuctor:
 
     $ python cat.py
     >> say_meow
