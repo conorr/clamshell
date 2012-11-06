@@ -4,7 +4,7 @@ consoll
 Command-line wrapper for Python modules
 ---------------------------------------
 
-Consoll enables you to write your own interactive shells trivially. Arrow-key-navigable command history and tab completion come baked in.
+Consoll enables you to write your own interactive shells trivially. Bash-style command history and tab completion come baked in.
 
 Here is an example:
 
