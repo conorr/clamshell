@@ -7,19 +7,21 @@ class Consoll():
     line        = ''
     history     = deque()
     history_pos = -1
+    map_call        = {}
 
     header = ''
     prompt = ''
 
-    def __init__(self, obj):
+    def __init__(self, func_list):
 
-        self.call = obj.__dict__
+        for item in func_list:
+            if isinstance(item, tuple):
+                self.map_call[item[0]] = item[1]
+            else:
+                self.map_call[item.__name__] = item
 
-        self.header = 'Welcome to ' + obj.__name__ + '!'
-
-        self.call['history'] = self.list_history
-        self.call['exit']    = sys.exit
-
+        self.map_call['history'] = self.list_history
+        self.map_call['exit']    = sys.exit
 
     def start(self):
 
@@ -32,7 +34,7 @@ class Consoll():
         oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 
-        print self.header
+        if self.header: print self.header
 
         # main keypress loop
         try:
@@ -122,7 +124,7 @@ class Consoll():
         if len(tokens) > 1: args = tokens[1:]
 
         try:
-            self.call[cmd](*args)
+            self.map_call[cmd](*args)
         except KeyError:
             print "Error: method \'%s\' not defined" % (cmd)
             pass
