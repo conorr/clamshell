@@ -6,7 +6,7 @@ Command-line wrapper for Python modules
 
 Consoll enables you to write your own interactive shells trivially. Bash-style command history and tab completion come baked in.
 
-Here is an example:
+### Example
 
 
 ```python
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     c.start()
 ```
 
-Running the script starts a minimal command-line interface that exposes the methods we passed to the `Consoll` constuctor:
+Executing the script starts a minimal command-line interface that exposes the methods we passed to the `Consoll` constructor:
 
     $ python cat.py
     >> say_meow
