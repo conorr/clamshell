@@ -25,10 +25,8 @@ class Cat():
 if __name__ == '__main__':
 
     my_cat = Cat()
-
     cs = Clamshell({ 'say_meow': my_cat.say_meow,
-                          'add': my_cat.add })
-
+                          'add': my_cat.add       })
     cs.start()
 ```
 
