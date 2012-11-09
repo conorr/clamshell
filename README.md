@@ -1,7 +1,7 @@
 clamshell
 =======
 
-Command-line wrapper for Python modules
+Command-line layer for Python modules
 ---------------------------------------
 
 ### Introduction
