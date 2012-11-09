@@ -1,4 +1,4 @@
-from consoll import Consoll
+from clamshell import Clamshell
 import sys
 
 class Cat():
@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     my_cat = Cat()
 
-    c = Consoll({ 'meow':       my_cat.meow,
-                  'meow_count': my_cat.meow_count,
-                  'exit':       sys.exit })
-    c.start()
+    console = Clamshell({ 'meow':       my_cat.meow,
+                          'meow_count': my_cat.meow_count,
+                          'exit':       sys.exit })
+    console.start()

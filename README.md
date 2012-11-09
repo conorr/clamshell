@@ -6,13 +6,13 @@ Command-line wrapper for Python modules
 
 ### Introduction
 
-Consoll enables you to write your own interactive shells trivially. Bash-style command history and tab completion come baked in.
+Clamshell enables you to write your own interactive shells trivially. Bash-style command history and tab completion come baked in.
 
 ### Example
 
 
 ```python
-from consoll import Consoll
+from clamshell import Clamshell
 
 class Cat():
 
@@ -25,12 +25,14 @@ class Cat():
 if __name__ == '__main__':
 
     my_cat = Cat()
-    c = Consoll({'say_meow': my_cat.say_meow,
-                      'add': my_cat.add })
-    c.start()
+
+    cs = Clamshell({'say_meow': my_cat.say_meow,
+                    'add': my_cat.add })
+
+    cs.start()
 ```
 
-Executing the script starts a minimal command-line interface that exposes the methods we passed to the `Consoll` constructor:
+Executing the script starts a minimal command-line interface that exposes the methods we passed to the `Clamshell` constructor:
 
     $ python cat.py
     >> say_meow
