@@ -1,4 +1,4 @@
-consoll
+clamshell
 =======
 
 Command-line wrapper for Python modules
