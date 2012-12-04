@@ -1,7 +1,7 @@
 import termios, fcntl, sys, os
 from collections import deque
 
-class Consoll():
+class Clamshell():
 
     cursor      = 0
     line        = ''
