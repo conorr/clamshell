@@ -21,5 +21,6 @@ if __name__ == '__main__':
     my_cat = Cat()
     console = Clamshell({'meow':       my_cat.meow,
                          'meow_count': my_cat.meow_count,
+                         'say':        my_cat.say,
                          'exit':       sys.exit})
     console.start()
