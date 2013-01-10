@@ -1,11 +1,15 @@
-import termios, fcntl, sys, os
+import termios
+import fcntl
+import sys
+import os
 from collections import deque
+
 
 class Clamshell():
 
-    cursor      = 0
-    line        = ''
-    history     = deque()
+    cursor = 0
+    line = ''
+    history = deque()
     history_pos = -1
     map_call        = {}
     escaped     = 0
@@ -15,7 +19,7 @@ class Clamshell():
 
     def __init__(self, map):
 
-        for func, ref in map.items():   
+        for func, ref in map.items():
             self.map_call[func] = ref
 
         self.map_call['history'] = self.list_history
@@ -31,7 +35,8 @@ class Clamshell():
         oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
         fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
 
-        if self.header: print self.header
+        if self.header:
+            print self.header
 
         # main keypress loop
         try:
@@ -68,7 +73,8 @@ class Clamshell():
                     self.cursor += 1
                     self.line  += c
 
-                except IOError: pass
+                except IOError:
+                    pass
 
         finally:
 
@@ -101,15 +107,18 @@ class Clamshell():
 
     def history_back(self):
         entries = len(self.history)
-        if entries == 0: return
+        if entries == 0:
+            return
         if entries - self.history_pos > 1:
             self.history_pos += 1
         self.write_line(self.history[self.history_pos])
 
     def history_forward(self):
         entries = len(self.history)
-        if entries == 0: return
-        if self.history_pos >= 0: self.history_pos -= 1
+        if entries == 0:
+            return
+        if self.history_pos >= 0:
+            self.history_pos -= 1
         if self.history_pos < 0:
             self.reset_line()
             return
@@ -126,13 +135,14 @@ class Clamshell():
             print i, item
 
     def parse_request(self, request):
-        if request == '': return
+        if request == '':
+            return
         cmd = ''
         args = []
         tokens = request.split(' ')
         cmd = tokens[0]
-        if len(tokens) > 1: args = tokens[1:]
-
+        if len(tokens) > 1:
+            args = tokens[1:]
         try:
             self.map_call[cmd](*args)
         except KeyError:
