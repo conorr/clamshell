@@ -25,9 +25,9 @@ class Cat():
 if __name__ == '__main__':
 
     my_cat = Cat()
-    cs = Clamshell({ 'say_meow': my_cat.say_meow,
-                          'add': my_cat.add       })
-    cs.start()
+    shell = Clamshell({'say_meow': my_cat.say_meow,
+                       'add': my_cat.add})
+    shell.start()
 ```
 
 Executing the script starts a minimal command-line interface that exposes the methods we passed to the `Clamshell` constructor:
