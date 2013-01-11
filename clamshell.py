@@ -1,3 +1,4 @@
+from ast import literal_eval
 import termios
 import fcntl
 import sys
@@ -11,8 +12,8 @@ class Clamshell():
     line = ''
     history = deque()
     history_pos = -1
-    map_call        = {}
-    escaped     = 0
+    map_call = {}
+    escaped = 0
 
     header = ''
     prompt = ''
@@ -103,7 +104,7 @@ class Clamshell():
     def add_to_history(self):
         # only add non-empty lines
         if self.line != '':
-            self.history.appendleft(self.line)
+            self.history.appendleft(self.line.strip())
 
     def history_back(self):
         entries = len(self.history)
@@ -139,10 +140,47 @@ class Clamshell():
             return
         cmd = ''
         args = []
-        tokens = request.split(' ')
+        token = ''
+        tokens = []
+        braced = False
+        braced_args = []
+
+        for char in request:
+            if char == ' ':
+                if braced is True:
+                    token += char
+                else:
+                    if len(token) > 0:
+                        tokens.append(token)
+                        token = ''
+            else:
+                if char == '{':
+                    braced = True
+                    token += char
+                elif char == '}':
+                    braced = False
+                    token += char
+                    tokens.append(token)
+                    braced_args.append(len(tokens) - 1)
+                    token = ''
+                else:
+                    token += char
+
+        # append token if there's still one there
+        if len(token) > 0:
+            tokens.append(token)
+
+        for i in braced_args:
+            try:
+                tokens[i] = literal_eval(tokens[i])
+            except:
+                print "Syntax error in argument: {0}".format(tokens[i])
+                return
+
         cmd = tokens[0]
         if len(tokens) > 1:
             args = tokens[1:]
+
         try:
             self.map_call[cmd](*args)
         except KeyError:
