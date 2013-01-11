@@ -25,6 +25,9 @@ class Clamshell():
 
         self.map_call['history'] = self.list_history
 
+    def add(self, item):
+        self.map_call.update(item)
+
     def start(self):
 
         # do a bunch of arcane stuff to set up the terminal
