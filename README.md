@@ -38,7 +38,9 @@ Executing the script starts a minimal command-line interface that exposes the me
     >> add 2 3
     5
 
-That's great, but can Clamshell parse hash arguments? Yes it can! Suppose the following was a method of the Cat class that we registered with the Clamshell instance:
+### Hash arguments
+
+Clamshell supports passing hashes as arguments. Suppose the following was a method of the Cat class, and suppose we registered with the Clamshell instance:
 
 ```python
 def show_hash(self, h):
