@@ -41,11 +41,11 @@ Executing the script starts a minimal command-line interface that exposes the me
 Clamshell can also parse hash arguments. Supposed we registered the following method to the Clamshell instance:
 
     def show_hash(self, h):
-        for (key, val) in h.items():
+        for key, val in h.items():
             print key, val
 
 We can then call it thus:
 
-    >> show_has {'fruit': 'banana', 'veggie': 'celery'}
+    >> show_hash {'fruit': 'banana', 'veggie': 'celery'}
     fruit banana
     veggie celery
