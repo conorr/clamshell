@@ -154,23 +154,24 @@ class Clamshell():
 
         token = ''
         tokens = []
-        braced = False
+        braced = None
         braced_args = []
+        braces = {'{':'}', '[':']', '(':')'}
 
         for char in request:
             if char == ' ':
-                if braced is True:
+                if braced:
                     token += char
                 else:
                     if len(token) > 0:
                         tokens.append(token)
                         token = ''
             else:
-                if char == '{':
-                    braced = True
+                if char in braces.keys():
+                    braced = char
                     token += char
-                elif char == '}':
-                    braced = False
+                elif char in braces.values():
+                    braced = None
                     token += char
                     tokens.append(token)
                     braced_args.append(len(tokens) - 1)
@@ -182,6 +183,7 @@ class Clamshell():
         if len(token) > 0:
             tokens.append(token)
 
+        # parse braced arguments into real Python objects
         for i in braced_args:
             try:
                 tokens[i] = literal_eval(tokens[i])
