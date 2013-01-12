@@ -79,6 +79,9 @@ class Clamshell():
 
                 except IOError:
                     pass
+                except KeyboardInterrupt:
+                    pass
+                    sys.exit()
 
         finally:
 
