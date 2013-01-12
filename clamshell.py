@@ -92,7 +92,16 @@ class Clamshell():
         request = self.line
         self.line = ''
         self.history_pos = -1
-        self.parse_request(request)
+        call = self.parse(request)
+        self.execute(call)
+
+    def execute(self, call):
+        (cmd, args) = call[0], call[1:]
+        try:
+            self.map_call[cmd](*args)
+        except KeyError:
+            print "Error: command \'%s\' not defined" % (cmd)
+            pass
 
     def backspace(self):
         sys.stdout.write('\b \b')
@@ -138,11 +147,11 @@ class Clamshell():
         for i, item in enumerate(self.history):
             print i, item
 
-    def parse_request(self, request):
+    def parse(self, request):
+
         if request == '':
             return
-        cmd = ''
-        args = []
+
         token = ''
         tokens = []
         braced = False
@@ -180,12 +189,4 @@ class Clamshell():
                 print "Syntax error in argument: {0}".format(tokens[i])
                 return
 
-        cmd = tokens[0]
-        if len(tokens) > 1:
-            args = tokens[1:]
-
-        try:
-            self.map_call[cmd](*args)
-        except KeyError:
-            print "Error: command \'%s\' not defined" % (cmd)
-            pass
+        return tokens
