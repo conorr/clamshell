@@ -40,7 +40,7 @@ Executing the script starts a minimal command-line interface that exposes the me
 
 ### Hash arguments
 
-Clamshell supports passing hashes as arguments. Suppose the following was a method of the Cat class, and suppose we registered with the Clamshell instance:
+Clamshell supports passing hashes as arguments. Suppose the following was a method of the Cat class:
 
 ```python
 def show_hash(self, h):
@@ -48,7 +48,7 @@ def show_hash(self, h):
         print key, val
 ```
 
-We can then call it thus:
+Now suppose we registered it with the Clamshell instance. We can then call it thus:
 
     $ python cat.py
     >> show_hash {'fruit': 'banana', 'veggie': 'celery'}
