@@ -1,9 +1,9 @@
+from collections import deque
 from ast import literal_eval
 import termios
 import fcntl
 import sys
 import os
-from collections import deque
 
 
 class Clamshell():
@@ -13,7 +13,6 @@ class Clamshell():
     history = deque()
     history_pos = -1
     map_call = {}
-    escaped = 0
 
     header = ''
     prompt = ''
@@ -29,6 +28,7 @@ class Clamshell():
         self.map_call.update(item)
 
     def start(self):
+        """Start a terminal and process keystrokes"""
 
         # do a bunch of arcane stuff to set up the terminal
         fd = sys.stdin.fileno()
@@ -42,40 +42,40 @@ class Clamshell():
         if self.header:
             print self.header
 
+        escaped = False
+        escaped_chars = ''
+
         # main keypress loop
         try:
             while 1:
                 try:
-                    c = sys.stdin.read(1)
 
-                    if c == '\x1b':
-                        self.escaped = 1
-                        c = ''
-                    if c == '[' and self.escaped == 1:
-                        self.escaped = 2
-                        c = ''
-                    if c == 'A' and self.escaped == 2:
-                        c = ''
-                        self.escaped = 0
-                        self.history_back()
-                    if c == 'B' and self.escaped == 2:
-                        c = ''
-                        self.escaped = 0
-                        self.history_forward()
-                    if c == 'D' and self.escaped == 2:
-                        c = ''
-                    if c == 'C' and self.escaped == 2:
-                        c = ''
-                    if c == '\n':
-                        c = ''
-                        self.enter()
-                    if c == '\x7f':
-                        self.backspace()
-                        c = ''
+                    char = sys.stdin.read(1)
 
-                    sys.stdout.write(c)
+                    if escaped_chars:
+                        escaped_chars += char
+                        if len(escaped_chars) == 3:
+                            if escaped_chars == '\x1b[A':
+                                self.history_back()
+                            elif escaped_chars == '\x1b[B':
+                                self.history_forward()
+                            escaped_chars = ''
+                        char = ''
+
+                    else:
+                        if char == '\n':
+                            self.enter()
+                            char = ''
+                        elif char == '\x7f':
+                            self.backspace()
+                            char = ''
+                        elif char == '\x1b':
+                            escaped_chars += '\x1b'
+                            char = ''
+
+                    sys.stdout.write(char)
                     self.cursor += 1
-                    self.line  += c
+                    self.line  += char
 
                 except IOError:
                     pass
@@ -84,7 +84,6 @@ class Clamshell():
                     sys.exit()
 
         finally:
-
             # reset the terminal
             termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
             fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
@@ -99,12 +98,13 @@ class Clamshell():
         self.execute(call)
 
     def execute(self, call):
-        (cmd, args) = call[0], call[1:]
-        try:
-            self.map_call[cmd](*args)
-        except KeyError:
-            print "Error: command \'%s\' not defined" % (cmd)
-            pass
+        if call:
+            (cmd, args) = call[0], call[1:]
+            try:
+                self.map_call[cmd](*args)
+            except KeyError:
+                print "Error: command \'%s\' not defined" % (cmd)
+                pass
 
     def backspace(self):
         sys.stdout.write('\b \b')
