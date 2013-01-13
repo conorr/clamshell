@@ -95,16 +95,16 @@ class Clamshell():
         self.line = ''
         self.history_pos = -1
         call = self.parse(request)
-        self.execute(call)
+        if call:
+            self.execute(call)
 
     def execute(self, call):
-        if call:
-            (cmd, args) = call[0], call[1:]
-            try:
-                self.map_call[cmd](*args)
-            except KeyError:
-                print "Error: command \'%s\' not defined" % (cmd)
-                pass
+        cmd, args = call[0], call[1:]
+        try:
+            self.map_call[cmd](*args)
+        except KeyError:
+            pass
+            print "Error: command \'%s\' not defined" % (cmd)
 
     def backspace(self):
         sys.stdout.write('\b \b')
