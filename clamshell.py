@@ -25,6 +25,7 @@ class Clamshell():
         self.map_call['history'] = self.list_history
 
     def add(self, item):
+        """Add a function/reference item to the map"""
         self.map_call.update(item)
 
     def start(self):
@@ -42,7 +43,6 @@ class Clamshell():
         if self.header:
             print self.header
 
-        escaped = False
         escaped_chars = ''
 
         # main keypress loop
@@ -75,7 +75,7 @@ class Clamshell():
 
                     sys.stdout.write(char)
                     self.cursor += 1
-                    self.line  += char
+                    self.line += char
 
                 except IOError:
                     pass
@@ -89,6 +89,7 @@ class Clamshell():
             fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
 
     def enter(self):
+        """Process a line into a function call"""
         sys.stdout.write('\n' + self.prompt)
         self.add_to_history()
         request = self.line
@@ -99,6 +100,7 @@ class Clamshell():
             self.execute(call)
 
     def execute(self, call):
+        """Execute a function call"""
         cmd, args = call[0], call[1:]
         try:
             self.map_call[cmd](*args)
@@ -107,21 +109,25 @@ class Clamshell():
             print "Error: command \'%s\' not defined" % (cmd)
 
     def backspace(self):
+        """Write a backspace"""
         sys.stdout.write('\b \b')
         self.line = self.line[0:-1]
 
     def reset_line(self):
+        """Clear out the command line"""
         for i in range(self.cursor):
             self.backspace()
         self.cursor = 0
         self.line = ''
 
     def add_to_history(self):
+        """Add the current line to history"""
         # only add non-empty lines
         if self.line != '':
             self.history.appendleft(self.line.strip())
 
     def history_back(self):
+        """Go back one position in the command history"""
         entries = len(self.history)
         if entries == 0:
             return
@@ -130,6 +136,7 @@ class Clamshell():
         self.write_line(self.history[self.history_pos])
 
     def history_forward(self):
+        """Go forward one position in the command history"""
         entries = len(self.history)
         if entries == 0:
             return
@@ -141,6 +148,7 @@ class Clamshell():
         self.write_line(self.history[self.history_pos])
 
     def write_line(self, s):
+        """Write out a string on the command line"""
         self.reset_line()
         sys.stdout.write(s)
         self.cursor = len(s)
@@ -151,6 +159,7 @@ class Clamshell():
             print i, item
 
     def parse(self, request):
+        """Parse a line of chars into a list of tokens"""
 
         if request == '':
             return
