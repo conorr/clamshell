@@ -38,9 +38,9 @@ Executing the script starts a minimal command-line interface that exposes the me
     >> add 2 3
     5
 
-### Passing Python data structures as arguments
+### Command-line parsing of Python objects
 
-Clamshell supports passing hashes, lists, and tuples as arguments. Suppose the following was a method of the Cat class:
+Clamshell supports passing hashes, lists, and tuples as arguments in the command line. Suppose the following was a method of the Cat class:
 
 ```python
 def show_hash(self, h):

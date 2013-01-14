@@ -170,6 +170,9 @@ class Clamshell():
         braced_args = []
         braces = {'{':'}', '[':']', '(':')'}
 
+        def closing(brace):
+            return braces[brace]
+
         for char in request:
             if char == ' ':
                 if braced:
@@ -179,10 +182,10 @@ class Clamshell():
                         tokens.append(token)
                         token = ''
             else:
-                if char in braces.keys():
+                if not braced and char in braces.keys():
                     braced = char
                     token += char
-                elif char in braces.values():
+                elif braced and char == closing(braced):
                     braced = None
                     token += char
                     tokens.append(token)

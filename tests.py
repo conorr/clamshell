@@ -28,8 +28,8 @@ class ClamshellTests(unittest.TestCase):
 
     def test_list_parsing(self):
         # first pos
-        tokens = self.shell.parse("['aa', 'bbb', 'c'] foo bar")
-        expect = [['aa', 'bbb', 'c'], 'foo', 'bar']
+        tokens = self.shell.parse("['aa', 'b(b)b', 'c'] foo bar")
+        expect = [['aa', 'b(b)b', 'c'], 'foo', 'bar']
         self.assertEqual(tokens, expect)
         # second pos
         tokens = self.shell.parse("foo ['aa', 'bbb', 'c'] bar")
@@ -43,6 +43,11 @@ class ClamshellTests(unittest.TestCase):
     def test_tuple_parsing(self):
         tokens = self.shell.parse("('this', 'is', 'a', 'tuple')")
         expect = [('this', 'is', 'a', 'tuple')]
+        self.assertEqual(tokens, expect)
+
+    def test_hash_embedded(self):
+        tokens = self.shell.parse("{'this': 'isa[(str)ing]'}")
+        expect = [{'this': 'isa[(str)ing]'}]
         self.assertEqual(tokens, expect)
 
 if __name__ == '__main__':
