@@ -48,7 +48,7 @@ def show_hash(self, h):
         print key, val
 ```
 
-Now suppose we registered it with the Clamshell instance. We can then call it thus:
+Now suppose it's been registered with the Clamshell instance. We can call it like this:
 
     $ python cat.py
     >> show_hash {'fruit': 'banana', 'veggie': 'celery'}
