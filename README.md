@@ -6,7 +6,7 @@ Command-line layer for Python modules
 
 ### Introduction
 
-Clamshell enables you to write your own interactive shells trivially. Bash-style command history comes baked in.
+Clamshell aims to enable you to write your own interactive shells trivially. Bash-style command history comes baked in.
 
 ### Example
 
