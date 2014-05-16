@@ -12,6 +12,7 @@ class TerminalDriver():
     initialized = False
 
     buf = ''
+    curs = -1
 
     def init(self):
         log('console started')
@@ -70,9 +71,13 @@ class TerminalDriver():
                         self.write(char)
                         self.parse_line(self.buf)
                         self.buf = ''
+                        self.curs = -1
                     else:
+                        log(str(ord(char)))
                         self.write(char)
                         self.buf += char
+                        self.curs = len(self.buf)
+                        self.trace()
 
             except IOError:
                 pass
@@ -81,9 +86,19 @@ class TerminalDriver():
 
     def map_csi_call(self, sequence):
         """Evaluate a CSI escape sequence."""
+        log("csi call with sequence '{}'".format(sequence))
         # sequence will usually be one char, but it can be more.
         if sequence == 'A':
             self.clear_line()
+        elif sequence == 'D': # left arrow
+            self.write(ESC + '[' + 'D')
+            self.curs -= 1
+            self.trace()
+        elif sequence == 'C': # right arrow
+            if self.curs < len(self.buf):
+                self.write(ESC + '[' + 'C')
+                self.curs += 1
+                self.trace()
 
     def parse_line(self, line):
         tokens = line.split(' ')
@@ -96,11 +111,18 @@ class TerminalDriver():
     def backspace(self):
         self.write('\b \b')
         self.buf = self.buf[0:-1]
+        self.curs = len(self.buf)
+        self.trace()
 
     def clear_line(self):
         log('clearing line')
         for char in self.buf:
             self.backspace()
+
+    def trace(self):
+        with open('log.txt', 'a') as f:
+            s = "cursor: {} buf: '{}'".format(self.curs, self.buf)
+            f.write(s + '\n')
 
 
 def log(message):
