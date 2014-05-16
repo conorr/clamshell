@@ -10,11 +10,11 @@ NEWLINE = '\n'
 class TerminalDriver():
 
     initialized = False
-
     buf = ''
     curs = -1
 
     def init(self):
+        """Does a bunch of arcane stuff to set up the terminal."""
         log('console started')
         # do a bunch of arcane stuff to set up the terminal
         if not self.initialized:
@@ -28,19 +28,23 @@ class TerminalDriver():
             self.initialized = True
 
     def reset(self):
+        """Resets the terminal to the state it was in before it was
+        initialized."""
         log('resetting terminal')
         if self.initialized:
             termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.oldterm)
             fcntl.fcntl(self.fd, fcntl.F_SETFL, self.oldflags)
 
     def write(self, string):
+        """Writes a string to the terminal."""
         sys.stdout.write(string)
 
     def write_line(self, string):
+        """Writes a string to the terminal and a newline."""
         sys.stdout.write(string + '\n')
 
     def read(self):
-        """Listen for keystrokes and interpret them."""
+        """Listens for keystrokes and takes action based on them."""
         esc_mode = False
         esc_seq = ''
         csi_mode = False
