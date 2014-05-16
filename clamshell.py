@@ -28,17 +28,27 @@ class Clamshell():
         """Add a function/reference item to the map"""
         self.map_call.update(item)
 
+    def set_header(self, header):
+        self.header = header
+
+    def setup_terminal(self):
+        # do a bunch of arcane stuff to set up the terminal
+        self.fd = sys.stdin.fileno()
+        self.oldterm = termios.tcgetattr(self.fd)
+        newattr = termios.tcgetattr(self.fd)
+        newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
+        termios.tcsetattr(self.fd, termios.TCSANOW, newattr)
+        self.oldflags = fcntl.fcntl(self.fd, fcntl.F_GETFL)
+        fcntl.fcntl(self.fd, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)
+
+    def reset_terminal(self):
+        termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.oldterm)
+        fcntl.fcntl(self.fd, fcntl.F_SETFL, self.oldflags)
+
     def start(self):
         """Start a terminal and process keystrokes"""
 
-        # do a bunch of arcane stuff to set up the terminal
-        fd = sys.stdin.fileno()
-        oldterm = termios.tcgetattr(fd)
-        newattr = termios.tcgetattr(fd)
-        newattr[3] = newattr[3] & ~termios.ICANON & ~termios.ECHO
-        termios.tcsetattr(fd, termios.TCSANOW, newattr)
-        oldflags = fcntl.fcntl(fd, fcntl.F_GETFL)
-        fcntl.fcntl(fd, fcntl.F_SETFL, oldflags | os.O_NONBLOCK)
+        self.setup_terminal();
 
         if self.header:
             print self.header
@@ -84,9 +94,7 @@ class Clamshell():
                     sys.exit()
 
         finally:
-            # reset the terminal
-            termios.tcsetattr(fd, termios.TCSAFLUSH, oldterm)
-            fcntl.fcntl(fd, fcntl.F_SETFL, oldflags)
+            self.reset_terminal()
 
     def enter(self):
         """Process a line into a function call"""
