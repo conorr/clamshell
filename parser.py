@@ -9,7 +9,8 @@ def parse(expression):
             try:
                 evaluated_token = literal_eval(token)
             except:
-                raise Exception('Error parsing token: ' + token)
+                print 'Error parsing token: ' + token
+                sys.exit()
             evaluated_tokens.append(evaluated_token)
         else:
             evaluated_tokens.append(token)
@@ -55,6 +56,6 @@ def is_evaluatable(string):
         return False
 
 if __name__ == '__main__':
-    tokens = parse('{"x": 2} foo [1, 2, 3] foo bar')
+    tokens = parse('{"x":: 2}foo [1, 2, 3] foo bar')
     print tokens
     print [type(token) for token in tokens]
