@@ -6,16 +6,20 @@ def parse(expr):
     evaluated_tokens = []
     for token in tokens:
         if is_evaluatable(token):
-            try:
-                evaluated_token = literal_eval(token)
-            except:
-                print 'Error parsing token: ' + token
-                sys.exit()
+            evaluated_token = evaluate(token)
             evaluated_tokens.append(evaluated_token)
         else:
             evaluated_tokens.append(token)
 
     return evaluated_tokens
+
+def evaluate(token):
+    try:
+        token = literal_eval(token)
+    except:
+        print 'Error parsing token: ' + token
+        sys.exit()
+    return token
 
 def parse_into_tokens(expr):
     tokens = []
@@ -56,6 +60,6 @@ def is_evaluatable(string):
         return False
 
 if __name__ == '__main__':
-    tokens = parse('{"x":: 2}foo [1, 2, 3] foo bar')
+    tokens = parse('{"x": 2}foo [1, 2, 3] foo bar')
     print tokens
     print [type(token) for token in tokens]
