@@ -31,9 +31,9 @@ def parse_into_tokens(expr):
         else:
             return tokens
 
-def break_off_token(string):
+def break_off_token(expr):
     breakchar = ' '
-    for i, char in enumerate(string):
+    for i, char in enumerate(expr):
         if i == 0:
             if char == '{':
                 breakchar = '}'
@@ -42,11 +42,11 @@ def break_off_token(string):
 
         if char == breakchar:
             if breakchar == ' ':
-                return (string[:i], string[i+1:])
+                return (expr[:i], expr[i+1:])
             else:
-                return (string[:i+1], string[i+2:])
+                return (expr[:i+1], expr[i+2:])
 
-    return (None, string)
+    return (None, expr)
 
 def is_evaluatable(string):
     if len(string) <= 1:
