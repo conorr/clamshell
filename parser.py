@@ -1,8 +1,8 @@
 from ast import literal_eval
 import sys
 
-def parse(expression):
-    tokens = parse_into_tokens(expression)
+def parse(expr):
+    tokens = parse_into_tokens(expr)
     evaluated_tokens = []
     for token in tokens:
         if is_evaluatable(token):
@@ -17,10 +17,10 @@ def parse(expression):
 
     return evaluated_tokens
 
-def parse_into_tokens(expression):
+def parse_into_tokens(expr):
     tokens = []
     while True:
-        (token, expression) = break_off_token(expression)
+        (token, expr) = break_off_token(expr)
         if token:
             tokens.append(token)
         else:
