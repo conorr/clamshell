@@ -6,14 +6,15 @@ def parse(expr):
     evaluated_tokens = []
     for token in tokens:
         if is_evaluatable(token):
-            evaluated_token = evaluate(token)
+            evaluated_token = try_compile(token)
             evaluated_tokens.append(evaluated_token)
         else:
             evaluated_tokens.append(token)
 
     return evaluated_tokens
 
-def evaluate(token):
+def try_compile(token):
+    """Attempts to evaluate a string into a dict, list, or tuple."""
     try:
         token = literal_eval(token)
     except:
