@@ -13,10 +13,21 @@ class TerminalDriver():
     buf = ''
     curs = -1
 
+    def __init__(self, prompt='> ', header=None):
+        self.header = header
+        self.prompt = prompt
+
+    @property
+    def header(self, header):
+        self.header = header
+
+    @property
+    def prompt(self, prompt):
+        self.prompt = prompt
+
     def init(self):
         """Does a bunch of arcane stuff to set up the terminal."""
         log('console started')
-        # do a bunch of arcane stuff to set up the terminal
         if not self.initialized:
             self.fd = sys.stdin.fileno()
             self.oldterm = termios.tcgetattr(self.fd)
@@ -25,6 +36,11 @@ class TerminalDriver():
             termios.tcsetattr(self.fd, termios.TCSANOW, newattr)
             self.oldflags = fcntl.fcntl(self.fd, fcntl.F_GETFL)
             fcntl.fcntl(self.fd, fcntl.F_SETFL, self.oldflags | os.O_NONBLOCK)
+
+            if self.header:
+                self.write(self.header + NEWLINE)
+            self.write(self.prompt)
+
             self.initialized = True
 
     def reset(self):
@@ -43,8 +59,9 @@ class TerminalDriver():
         """Writes a string to the terminal and a newline."""
         sys.stdout.write(string + '\n')
 
-    def read(self):
+    def start(self):
         """Listens for keystrokes and takes action based on them."""
+        self.init()
         esc_mode = False
         esc_seq = ''
         csi_mode = False
@@ -72,12 +89,8 @@ class TerminalDriver():
                     elif char == BACKSPACE:
                         self.backspace()
                     elif char == NEWLINE:
-                        self.write(char)
-                        self.parse_line(self.buf)
-                        self.buf = ''
-                        self.curs = -1
+                        self.return_()
                     else:
-                        log(str(ord(char)))
                         self.write(char)
                         self.buf += char
                         self.curs = len(self.buf)
@@ -95,33 +108,50 @@ class TerminalDriver():
         if sequence == 'A':
             self.clear_line()
         elif sequence == 'D': # left arrow
-            self.write(ESC + '[' + 'D')
-            self.curs -= 1
-            self.trace()
+            if self.curs > 0:
+                self.write(ESC + '[' + 'D')
+                self.curs -= 1
+                self.trace()
         elif sequence == 'C': # right arrow
             if self.curs < len(self.buf):
                 self.write(ESC + '[' + 'C')
                 self.curs += 1
                 self.trace()
 
+    def return_(self):
+        self.write(NEWLINE)
+        self.parse_line(self.buf)
+        self.buf = ''
+        self.curs = -1
+        self.write(self.prompt)
+
     def parse_line(self, line):
-        tokens = line.split(' ')
-        cmd = tokens.pop()
-        args = tokens
-        if cmd == 'exit':
-            sys.exit()
-        log("would be calling: '{}' with args {}".format(cmd, args))
+        if self.buf:
+            tokens = line.split(' ')
+            cmd = tokens.pop(0)
+            args = ' '.join(tokens)
+            if cmd:
+                log("would be calling: '{}' with args '{}'".format(cmd, args))
+                if cmd == 'exit':
+                    self.exit()
+                else:
+                    self.write_line("Error: unknown command '{}'".format(cmd))
 
     def backspace(self):
-        self.write('\b \b')
-        self.buf = self.buf[0:-1]
-        self.curs = len(self.buf)
-        self.trace()
+        if self.curs > 0:
+            self.write('\b \b')
+            self.buf = self.buf[0:-1]
+            self.curs = len(self.buf)
+            self.trace()
 
     def clear_line(self):
         log('clearing line')
         for char in self.buf:
             self.backspace()
+
+    def exit(self):
+        self.reset()
+        sys.exit()
 
     def trace(self):
         with open('log.txt', 'a') as f:
@@ -134,15 +164,7 @@ def log(message):
         f.write(message + '\n')
 
 if __name__ == '__main__':
-
     term = TerminalDriver()
-    term.init()
-
-    try:
-        term.write('hello\n')
-        char = term.read()
-        term.write(char)
-
-    except:
-        term.reset()
-        raise
+    term.header = 'Welcome to Clamshell!'
+    term.prompt = '$ '
+    term.start()
