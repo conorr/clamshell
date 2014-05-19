@@ -1,6 +1,10 @@
 from ast import literal_eval
 import sys
 
+def ParseError(Exception):
+    def __init__(self, message):
+        self.message = message
+
 def parse(expr):
     tokens = parse_into_tokens(expr)
     evaluated_tokens = []
@@ -32,20 +36,21 @@ def parse_into_tokens(expr):
             return tokens
 
 def break_off_token(expr):
-    breakchar = ' '
+    complements = {'{': '}', '[':']', '(':')'}
+    opening = None
     for i, char in enumerate(expr):
         if i == 0:
-            if char == '{':
-                breakchar = '}'
-            elif char == '[':
-                breakchar = ']'
-
-        if char == breakchar:
-            if breakchar == ' ':
-                return (expr[:i], expr[i+1:])
+            if char in complements.keys():
+                opening = char
+            elif char == ' ':
+                return (None, expr)
+        if char == ' ':
+            last_char = expr[i - 1]
+            if opening:
+                if last_char is complements[opening]:
+                    return (expr[:i], expr[i + 1:])
             else:
-                return (expr[:i+1], expr[i+2:])
-
+                return (expr[:i], expr[i + 1:])
     return (None, expr)
 
 def is_evaluatable(string):
@@ -61,6 +66,6 @@ def is_evaluatable(string):
         return False
 
 if __name__ == '__main__':
-    tokens = parse('{"x": 2}foo [1, 2, 3] foo bar')
+    tokens = parse('{"x": 2} foo [1, 2, 3] foo bar')
     print tokens
     print [type(token) for token in tokens]
