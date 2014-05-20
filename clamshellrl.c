@@ -25,8 +25,7 @@ static PyObject* start(PyObject* self)
         if (!input)
             break;
 
-        // Add input to history.
-        //add_history(input);
+        add_history(input);
 
         arglist = Py_BuildValue("(s)", input);
         result = PyObject_CallObject(dispatch_callback, arglist);

@@ -6,16 +6,23 @@ def ParseError(Exception):
         self.message = message
 
 def parse(expr):
-    tokens = parse_into_tokens(expr)
-    evaluated_tokens = []
-    for token in tokens:
-        if is_evaluatable(token):
-            evaluated_token = try_compile(token)
-            evaluated_tokens.append(evaluated_token)
+    """Parses an expression into a command and an argument vector."""
+    expr = expr.strip()
+    raw_tokens = parse_into_tokens(expr)
+    tokens = []
+    for raw_token in raw_tokens:
+        if is_evaluatable(raw_token):
+            token = try_compile(raw_token)
+            tokens.append(token)
         else:
-            evaluated_tokens.append(token)
-
-    return evaluated_tokens
+            tokens.append(raw_token)
+    if len(tokens) == 0:
+        return (None, [])
+    cmd = tokens.pop(0)
+    argv = []
+    if len(tokens):
+        argv = tokens
+    return (cmd, argv)
 
 def try_compile(token):
     """Attempts to evaluate a string into a dict, list, or tuple."""
