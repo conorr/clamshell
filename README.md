@@ -1,19 +1,16 @@
 clamshell
 =======
 
-Command-line layer for Python modules
+Command-line interface for Python modules
 ---------------------------------------
 
 ### Introduction
 
-Clamshell aims to enable you to write your own interactive shells trivially. Bash-style command history comes baked in.
+Clamshell faciliates writing interactive shells by wrapping the GNU Readline library. Tab completion and command history come baked in; all you have to do is bind commands to your Python methods.
 
 ### Example
 
-
 ```python
-from clamshell import Clamshell
-
 class Cat():
 
     def say_meow():
@@ -23,14 +20,15 @@ class Cat():
         print int(a) + int(b)
 
 if __name__ == '__main__':
-
     my_cat = Cat()
+
+    from clamshell import Clamshell
     shell = Clamshell({'say_meow': my_cat.say_meow,
                        'add': my_cat.add})
     shell.start()
 ```
 
-Executing the script starts a minimal command-line interface that exposes the methods we passed to the `Clamshell` constructor:
+Executing the above script starts a command-line interface that exposes the methods we passed to the `Clamshell` constructor:
 
     $ python cat.py
     >> say_meow
@@ -38,19 +36,22 @@ Executing the script starts a minimal command-line interface that exposes the me
     >> add 2 3
     5
 
-### Command-line parsing of Python objects
+Clamshell parses an input string into a command followed by an argument vector, which it uses to call the function bound to that command. That is, if there is a bound function:
 
-Clamshell supports passing hashes, lists, and tuples as arguments in the command line. Suppose the following was a method of the Cat class:
+    >> do_this_undefined_thing
+    Error: unknown command 'do_this_undefined_thing'
+
+### Passing Python objects as arguments
+
+Clamshell can parse hashes, lists, and tuples as arguments in the command line. Suppose the following was a method of the Cat class:
 
 ```python
 def show_hash(self, h):
     for key, val in h.items():
         print key, val
 ```
-
-Now suppose it's been registered with the Clamshell instance. We can call it like this:
-
-    $ python cat.py
-    >> show_hash {'fruit': 'banana', 'veggie': 'celery'}
-    fruit banana
-    veggie celery
+```
+>> show_hash {'fruit': 'banana', 'veggie': 'celery'}
+fruit banana
+veggie celery
+```
