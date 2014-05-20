@@ -31,13 +31,15 @@ static PyObject* start(PyObject* self)
         arglist = Py_BuildValue("(s)", input);
         result = PyObject_CallObject(my_callback, arglist);
         Py_DECREF(arglist);
+        if (result == NULL)
+            return NULL;
+        Py_DECREF(result);
  
         free(input);
     }
 }
 
-static PyObject *
-set_dispatch_callback(PyObject *dummy, PyObject *args)
+static PyObject* set_dispatch_callback(PyObject *dummy, PyObject *args)
 {
     PyObject *result = NULL;
     PyObject *temp;
