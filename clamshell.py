@@ -17,14 +17,19 @@ class Clamshell():
         cmd, argv = parser.parse(expr)
         if cmd in self.bindings.keys():
             fn = self.bindings[cmd]
-            arg_count = fn.func_code.co_argcount
-            if len(argv) != arg_count:
-                msg = "Error: '{}' takes {} argument{}, not {}"
-                plural = ''
-                if arg_count > 1: plural = 's'
-                print msg.format(cmd, arg_count, plural, len(argv))
-                return
-            fn.__call__(*argv)
+            try:
+                fn.__call__(*argv)
+            except TypeError:
+                if len(argv) != arg_count:
+                    arg_count = fn.func_code.co_argcount
+                    msg = "Error: '{}' takes {} argument{}, not {}"
+                    plural = ''
+                    if arg_count > 1: plural = 's'
+                    print msg.format(cmd, arg_count, plural, len(argv))
+                    return
+                else:
+                    print "Error: bad arguments"
+                    return
         else:
             print "Error: unknown command: '{}'".format(cmd)
 
