@@ -1,5 +1,5 @@
 from distutils.core import setup, Extension
-setup(name='helloworld', version='1.0',  \
-      ext_modules=[Extension('helloworld',
-                             ['hello.c'],
-                             extra_link_args=['-lreadline', '-Qunused-arguments'])])
+setup(name='clamshellrl', version='1.0',  \
+      ext_modules=[Extension('clamshellrl',
+                             ['clamshellrl.c'],
+                             extra_link_args=['-lreadline'])])

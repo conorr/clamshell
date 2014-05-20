@@ -57,7 +57,7 @@ my_set_callback(PyObject *dummy, PyObject *args)
     return result;
 }
 
-static PyMethodDef helloworld_funcs[] = {
+static PyMethodDef clamshellrl_funcs[] = {
     {"helloworld", (PyCFunction)helloworld, 
      METH_NOARGS, "Add doc here"},
     {"my_set_callback", (PyCFunction)my_set_callback,
@@ -65,9 +65,9 @@ static PyMethodDef helloworld_funcs[] = {
     {NULL}
 };
 
-void inithelloworld(void)
+void initclamshellrl(void)
 {
-    Py_InitModule3("helloworld", helloworld_funcs,
+    Py_InitModule3("clamshellrl", clamshellrl_funcs,
                    "Extension module example!");
 }
 
