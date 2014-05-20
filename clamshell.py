@@ -1,20 +1,23 @@
 #!/usr/bin/python
 import clamshellrl
+import parser
 import sys
 
-class Clamshel():
+class Clamshell():
 
     def __init__(self):
         clamshellrl.set_dispatch_callback(self.dispatch)
 
-    def dispatch(self, message):
-        if message == 'exit':
+    def dispatch(self, expr):
+        if expr == 'exit':
             sys.exit()
-        print "would dispatch " + message
+        tokens = parser.parse(expr)
+        print tokens
+        print [type(t) for t in tokens]
 
     def start(self):
         clamshellrl.start()
 
 if __name__ == '__main__':
-    shell = Clamshel()
+    shell = Clamshell()
     shell.start()

@@ -33,6 +33,7 @@ def parse_into_tokens(expr):
         if token:
             tokens.append(token)
         else:
+            tokens.append(expr)
             return tokens
 
 def break_off_token(expr):
