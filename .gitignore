@@ -1,5 +1,4 @@
 *.pyc
 *.swp
 log.txt
-*.so
-*.o
+build/
