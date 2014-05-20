@@ -6,7 +6,7 @@ Command-line interface for Python modules
 
 ### Introduction
 
-Clamshell faciliates writing interactive shells by wrapping the GNU Readline library. Tab completion and command history come baked in; all you have to do is bind commands to your Python methods.
+Clamshell facilitates writing interactive shells by wrapping the GNU Readline library. Tab completion and command history come baked in; all you have to do is bind commands to your Python methods.
 
 ### Example
 
@@ -20,26 +20,35 @@ class Cat():
         print int(a) + int(b)
 
 if __name__ == '__main__':
-    my_cat = Cat()
-
     from clamshell import Clamshell
+    my_cat = Cat()
     shell = Clamshell({'say_meow': my_cat.say_meow,
                        'add': my_cat.add})
     shell.start()
 ```
 
-Executing the above script starts a command-line interface that exposes the methods we passed to the `Clamshell` constructor:
+Executing the above script starts a command-line interface that exposes the methods passed to the `Clamshell` constructor:
 
-    $ python cat.py
-    >> say_meow
-    meow
-    >> add 2 3
-    5
+```
+$ python cat.py
+>> say_meow
+meow
+```
 
-Clamshell parses an input string into a command followed by an argument vector, which it uses to call the function bound to that command. That is, if there is a bound function:
+Clamshell parses an input string into a command followed by an argument vector, which it uses to call the function bound to that command.
 
-    >> do_this_undefined_thing
-    Error: unknown command 'do_this_undefined_thing'
+```
+>> add 2 3
+5
+```
+
+If there isn't one, it prints an error:
+
+```
+>> do_this_undefined_thing
+Error: unknown command 'do_this_undefined_thing'
+>>
+```
 
 ### Passing Python objects as arguments
 
