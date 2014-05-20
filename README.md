@@ -35,14 +35,14 @@ $ python cat.py
 meow
 ```
 
-Clamshell parses an input string into a command followed by an argument vector, which is passed to the function bound to the command:
+Clamshell parses an input string into a command followed by arguments, which are passed to the function bound to the command:
 
 ```
 >> add 2 3
 5
 ```
 
-If the command has no bound function, it prints an error:
+If a command has no bound function, it prints an error:
 
 ```
 >> do_this_undefined_thing
@@ -52,7 +52,7 @@ Error: unknown command 'do_this_undefined_thing'
 
 ### Passing Python objects as arguments
 
-Clamshell can parse hashes, lists, and tuples as arguments in the command line. Suppose the following was a method of the Cat class:
+Clamshell can parse hashes, lists, and tuples as arguments in the command line.
 
 ```python
 def show_hash(self, h):
