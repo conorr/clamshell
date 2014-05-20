@@ -20,8 +20,8 @@ class Clamshell():
             try:
                 fn.__call__(*argv)
             except TypeError:
+                arg_count = fn.func_code.co_argcount
                 if len(argv) != arg_count:
-                    arg_count = fn.func_code.co_argcount
                     msg = "Error: '{}' takes {} argument{}, not {}"
                     plural = ''
                     if arg_count > 1: plural = 's'
