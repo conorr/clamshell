@@ -5,11 +5,11 @@
 #include <readline/readline.h>
 #include <readline/history.h>
  
-static PyObject *my_callback = NULL;
+static PyObject *dispatch_callback = NULL;
 
 static PyObject* start(PyObject* self)
 {
-    char* input, shell_prompt[100];
+    char* input;
 
     PyObject *arglist;
     PyObject *result;
@@ -29,7 +29,7 @@ static PyObject* start(PyObject* self)
         //add_history(input);
 
         arglist = Py_BuildValue("(s)", input);
-        result = PyObject_CallObject(my_callback, arglist);
+        result = PyObject_CallObject(dispatch_callback, arglist);
         Py_DECREF(arglist);
         if (result == NULL)
             return NULL;
@@ -37,6 +37,9 @@ static PyObject* start(PyObject* self)
  
         free(input);
     }
+
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject* set_dispatch_callback(PyObject *dummy, PyObject *args)
@@ -50,8 +53,8 @@ static PyObject* set_dispatch_callback(PyObject *dummy, PyObject *args)
             return NULL;
         }
         Py_XINCREF(temp);         /* Add a reference to new callback */
-        Py_XDECREF(my_callback);  /* Dispose of previous callback */
-        my_callback = temp;       /* Remember new callback */
+        Py_XDECREF(dispatch_callback);  /* Dispose of previous callback */
+        dispatch_callback = temp;       /* Remember new callback */
         /* Boilerplate to return "None" */
         Py_INCREF(Py_None);
         result = Py_None;
@@ -72,4 +75,3 @@ void initclamshellrl(void)
     Py_InitModule3("clamshellrl", clamshellrl_funcs,
                    "Extension module example!");
 }
-
