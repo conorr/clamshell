@@ -35,14 +35,14 @@ $ python cat.py
 meow
 ```
 
-Clamshell parses an input string into a command followed by an argument vector, which it uses to call the function bound to that command.
+Clamshell parses an input string into a command followed by an argument vector, which is passed to the function bound to the command:
 
 ```
 >> add 2 3
 5
 ```
 
-If there isn't one, it prints an error:
+If the command has no bound function, it prints an error:
 
 ```
 >> do_this_undefined_thing
