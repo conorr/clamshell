@@ -37,7 +37,7 @@ static PyObject* helloworld(PyObject* self)
 }
 
 static PyObject *
-my_set_callback(PyObject *dummy, PyObject *args)
+set_dispatch_callback(PyObject *dummy, PyObject *args)
 {
     PyObject *result = NULL;
     PyObject *temp;
@@ -60,7 +60,7 @@ my_set_callback(PyObject *dummy, PyObject *args)
 static PyMethodDef clamshellrl_funcs[] = {
     {"helloworld", (PyCFunction)helloworld, 
      METH_NOARGS, "Add doc here"},
-    {"my_set_callback", (PyCFunction)my_set_callback,
+    {"set_dispatch_callback", (PyCFunction)set_dispatch_callback,
      METH_VARARGS, "Callback"},
     {NULL}
 };
