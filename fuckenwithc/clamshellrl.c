@@ -7,7 +7,7 @@
  
 static PyObject *my_callback = NULL;
 
-static PyObject* helloworld(PyObject* self)
+static PyObject* start(PyObject* self)
 {
     char* input, shell_prompt[100];
 
@@ -58,7 +58,7 @@ set_dispatch_callback(PyObject *dummy, PyObject *args)
 }
 
 static PyMethodDef clamshellrl_funcs[] = {
-    {"helloworld", (PyCFunction)helloworld, 
+    {"start", (PyCFunction)start, 
      METH_NOARGS, "Add doc here"},
     {"set_dispatch_callback", (PyCFunction)set_dispatch_callback,
      METH_VARARGS, "Callback"},
