@@ -11,11 +11,8 @@ def parse(expr):
     raw_tokens = parse_into_tokens(expr)
     tokens = []
     for raw_token in raw_tokens:
-        if is_evaluatable(raw_token):
-            token = try_compile(raw_token)
-            tokens.append(token)
-        else:
-            tokens.append(raw_token)
+        token = evaluate_token(raw_token)
+        tokens.append(token)
     if len(tokens) == 0:
         return (None, [])
     cmd = tokens.pop(0)
@@ -23,6 +20,24 @@ def parse(expr):
     if len(tokens):
         argv = tokens
     return (cmd, argv)
+
+def is_float_like(string):
+    return '.' in string
+
+def evaluate_token(token):
+    if is_evaluatable(token):
+        return try_compile(token)
+    if is_float_like(token):
+        try:
+            token = float(token)
+            return token
+        except ValueError:
+            pass
+    try:
+        token = int(token)
+    except:
+        pass
+    return token
 
 def try_compile(token):
     """Attempts to evaluate a string into a dict, list, or tuple."""

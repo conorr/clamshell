@@ -11,6 +11,7 @@ class ParserTests(unittest.TestCase):
         ('foo bar apple', ('foo', ['bar', 'apple'])),
         ('foo 2', ('foo', [2])),
         ('foo 2 bar', ('foo', [2, 'bar'])),
+        ('foo 2.0', ('foo', [float(2.0)])),
         ('apple [\'foo\', \'bar\']', ('apple', [['foo', 'bar']])),
     ]
 
