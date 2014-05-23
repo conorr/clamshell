@@ -70,9 +70,9 @@ def break_off_token(expr):
             last_char = expr[i - 1]
             if opening:
                 if last_char is complements[opening]:
-                    return (expr[:i], expr[i + 1:])
+                    return (expr[:i], expr[i + 1:].lstrip())
             else:
-                return (expr[:i], expr[i + 1:])
+                return (expr[:i], expr[i + 1:].lstrip())
     return (None, expr)
 
 def is_evaluatable(string):
