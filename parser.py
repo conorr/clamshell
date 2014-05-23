@@ -1,9 +1,11 @@
 from ast import literal_eval
 import sys
 
-def ParseError(Exception):
+class ParseError(Exception):
     def __init__(self, message):
         self.message = message
+    def __str__(self):
+        return self.message
 
 def parse(expr):
     """Parses an expression into a command and an argument vector."""
@@ -43,8 +45,7 @@ def try_compile(token):
     try:
         token = literal_eval(token)
     except:
-        print 'Error parsing token: ' + token
-        sys.exit()
+        raise ParseError('Error parsing token: ' + token)
     return token
 
 def parse_into_tokens(expr):
