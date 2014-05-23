@@ -7,7 +7,13 @@ class ParserTests(unittest.TestCase):
         pass
 
     parser_tests = [
+        ('', (None, [])),
+        ('    ', (None, [])),
+        ('foo', ('foo', [])),
+        ('foo ', ('foo', [])),
+        (' foo  ', ('foo', [])),
         ('foo bar', ('foo', ['bar'])),
+        #(' foo   bar ', ('foo', ['bar'])),
         ('foo bar apple', ('foo', ['bar', 'apple'])),
         ('foo 2', ('foo', [2])),
         ('foo 2 bar', ('foo', [2, 'bar'])),

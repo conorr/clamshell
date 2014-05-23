@@ -14,6 +14,8 @@ def parse(expr):
         return (None, [])
     cmd = tokens.pop(0)
     argv = []
+    if cmd == '':
+        cmd = None
     if len(tokens):
         argv = tokens
     return (cmd, argv)
