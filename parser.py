@@ -8,11 +8,8 @@ def ParseError(Exception):
 def parse(expr):
     """Parses an expression into a command and an argument vector."""
     expr = expr.strip()
-    raw_tokens = parse_into_tokens(expr)
-    tokens = []
-    for raw_token in raw_tokens:
-        token = evaluate_token(raw_token)
-        tokens.append(token)
+    tokens = parse_into_tokens(expr)
+    tokens = map(evaluate_token, tokens)
     if len(tokens) == 0:
         return (None, [])
     cmd = tokens.pop(0)
@@ -35,7 +32,7 @@ def evaluate_token(token):
             pass
     try:
         token = int(token)
-    except:
+    except ValueError:
         pass
     return token
 
