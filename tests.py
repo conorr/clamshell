@@ -1,54 +1,23 @@
-from clamshell import Clamshell
 import unittest
+import parser
 
-
-class TestClass():
-
-    def say_hello(self):
-        return "hello"
-
-
-class ClamshellTests(unittest.TestCase):
+class ParserTests(unittest.TestCase):
 
     def setUp(self):
-        self.cat = TestClass()
-        self.shell = Clamshell({'hello': self.cat.say_hello})
+        pass
 
-    def test_string_parsing(self):
-        tokens = self.shell.parse('a b c')
-        self.assertEqual(tokens, ['a', 'b', 'c'])
-        tokens = self.shell.parse('aa bb c dddd')
-        self.assertEqual(tokens, ['aa', 'bb', 'c', 'dddd'])
+    parser_tests = [
+        ('foo bar', ('foo', ['bar'])),
+        ('foo bar apple', ('foo', ['bar', 'apple'])),
+        ('foo 2', ('foo', [2])),
+        ('foo 2 bar', ('foo', [2, 'bar'])),
+        ('apple [\'foo\', \'bar\']', ('apple', [['foo', 'bar']])),
+    ]
 
-    def test_hash_parsing(self):
-        tokens = self.shell.parse("get /endpoint {'max_records': 5}")
-        self.assertEqual(tokens, ['get', '/endpoint', {'max_records': 5}])
-        tokens = self.shell.parse("get {'f1': 'b1', 'f2': 'b2'} thing")
-        self.assertEqual(tokens, ['get', {'f1':'b1','f2':'b2'}, 'thing'])
-
-    def test_list_parsing(self):
-        # first pos
-        tokens = self.shell.parse("['aa', 'b(b)b', 'c'] foo bar")
-        expect = [['aa', 'b(b)b', 'c'], 'foo', 'bar']
-        self.assertEqual(tokens, expect)
-        # second pos
-        tokens = self.shell.parse("foo ['aa', 'bbb', 'c'] bar")
-        expect = ['foo', ['aa', 'bbb', 'c'], 'bar']
-        self.assertEqual(tokens, expect)
-        # last pos
-        tokens = self.shell.parse("foo bar ['aa', 'bbb', 'c']")
-        expect = ['foo', 'bar', ['aa', 'bbb', 'c']]
-        self.assertEqual(tokens, expect)
-
-    def test_tuple_parsing(self):
-        tokens = self.shell.parse("('this', 'is', 'a', 'tuple')")
-        expect = [('this', 'is', 'a', 'tuple')]
-        self.assertEqual(tokens, expect)
-
-    def test_hash_embedded(self):
-        tokens = self.shell.parse("{'this': 'isa[(str)ing]'}")
-        expect = [{'this': 'isa[(str)ing]'}]
-        self.assertEqual(tokens, expect)
+    def test_parser(self):
+        for expr, expectation in self.parser_tests:
+            result = parser.parse(expr)
+            self.assertEqual(result, expectation)
 
 if __name__ == '__main__':
     unittest.main()
