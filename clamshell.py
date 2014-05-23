@@ -31,7 +31,7 @@ class Clamshell():
                     print "Error: bad arguments"
                     return
         else:
-            print "Error: unknown command: '{}'".format(cmd)
+            print "Error: unknown command '{}'".format(cmd)
 
     def bind(self, cmd, fn):
         self.bindings[cmd] = fn
