@@ -1,4 +1,4 @@
-all:
+install:
 	sudo python setup.py install
 
 test:
