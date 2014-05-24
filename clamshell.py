@@ -14,7 +14,11 @@ class Clamshell():
     def dispatch(self, expr):
         if expr == '':
             return
-        cmd, argv = parser.parse(expr)
+        try:
+            cmd, argv = parser.parse(expr)
+        except parser.ParseError as e:
+            print e
+            return
         if cmd in self.bindings.keys():
             fn = self.bindings[cmd]
             try:
