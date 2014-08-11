@@ -6,7 +6,7 @@ Command-line interface for Python modules
 
 ### Introduction
 
-Clamshell facilitates writing interactive shells by wrapping the GNU Readline library. Tab completion and command history come baked in; all you have to do is bind commands to your Python methods.
+Clamshell helps you write interactive shells by wrapping the GNU Readline library. All you have to do is bind commands to your Python methods.
 
 ### Example
 
